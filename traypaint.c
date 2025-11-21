@@ -19,36 +19,40 @@
 #include "raylib.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #define MAX_LINES 4096
+#define PADDING 50
 
 struct Line {
-	int xs, ys, xe, ye;
+	Vector2 start, end;
 	Color color;
 };
 
+bool veccmp(Vector2 v1, Vector2 v2) {
+	return (v1.x == v2.x && v1.y == v2.y);
+}
+
 void drawLines(struct Line lines[]) {
 	for(int i=0; i<MAX_LINES; ++i) {
-		DrawLine(lines[i].xs,
-				lines[i].ys,
-				lines[i].xe,
-				lines[i].ye,
+		DrawLineV(lines[i].start,
+				lines[i].end,
 				lines[i].color);
 	}
 }
 
 int main(void) {
 	char *title = "traypaint;";
-	int w, h;
-	w=h=0;
+	// screen and canvas dimensions
+	int w, h, cw, ch;
+	w=h=cw=ch=0;
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-	InitWindow(w, h, title);
+	InitWindow(600, 400, title);
 
 	SetExitKey(KEY_Q);
 
-	int xstart, ystart, xend, yend, xendl, yendl;
+	Vector2 startpos, endpos, endposl;
 	int cnt=0;
-	xendl = yendl = -1;
 	struct Line lines[MAX_LINES];
 	memset(lines, 0, sizeof(lines));
 
@@ -70,10 +74,14 @@ int main(void) {
 	Color currentColor=BLACK;
 	while(!WindowShouldClose()) {
 		BeginDrawing();
-		ClearBackground(RAYWHITE);
+		ClearBackground(LIGHTGRAY);
 
 		w = GetRenderWidth();
 		h = GetRenderHeight();
+		cw = GetRenderWidth() - PADDING*2;
+		ch = GetRenderHeight() - PADDING*2;
+
+		DrawRectangle(PADDING, PADDING, cw, ch, RAYWHITE);
 
 		// Draw data
 		drawLines(lines);
@@ -97,27 +105,20 @@ int main(void) {
 
 		// Get mouse position
 		if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-			xstart = GetMouseX();
-			ystart = GetMouseY();
+			startpos = GetMousePosition();
 		}
 		if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-			xend = GetMouseX();
-			yend = GetMouseY();
-			if(xendl != -1 && yendl != -1)
-				DrawLine(xstart, ystart, xendl, yendl, RAYWHITE);
-			DrawLine(xstart, ystart, xend, yend, currentColor);
+			endpos = GetMousePosition();
+			DrawLineV(startpos, endposl, RAYWHITE);
+			DrawLineV(startpos, endpos, currentColor);
 		}
-		if(xendl != xend)
-			xendl = xend;
-		if(yendl != yend)
-			yendl = yend;
+		if(!veccmp(endposl, endpos))
+			endposl = endpos;
 
 		if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 			struct Line tmp;
-			tmp.xs = xstart;
-			tmp.ys = ystart;
-			tmp.xe = xend;
-			tmp.ye = yend;
+			tmp.start = startpos;
+			tmp.end = endpos;
 			tmp.color = currentColor;
 
 			if(cnt < MAX_LINES)
