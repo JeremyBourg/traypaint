@@ -144,6 +144,12 @@ int main(void) {
 				lines[cnt++] = tmp;
 		}
 
+		if(IsKeyPressed(KEY_Z)) {
+			if(IsKeyDown(KEY_LEFT_CONTROL)) {
+				memset(&lines[--cnt], 0, sizeof(struct Line));
+			}
+		}
+
 		EndDrawing();
 	}
 
