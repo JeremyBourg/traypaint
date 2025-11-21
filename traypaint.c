@@ -23,6 +23,7 @@ int main(void) {
 	char *title = "traypaint;";
 	int w, h;
 	w=h=0;
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(w, h, title);
 
 	SetExitKey(KEY_CAPS_LOCK);
