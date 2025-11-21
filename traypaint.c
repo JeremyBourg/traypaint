@@ -26,7 +26,7 @@ int main(void) {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(w, h, title);
 
-	SetExitKey(KEY_CAPS_LOCK);
+	SetExitKey(KEY_Q);
 
 	int xstart, ystart, xend, yend, xendl, yendl;
 	int cnt=0;
