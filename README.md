@@ -16,7 +16,7 @@ make
 
 ## Roadmap
 
-- [ ] Drawing with multiple colors
+- [x] Drawing with multiple colors
 - [ ] Text
 - [ ] Shape tool
 - [ ] Importing images
