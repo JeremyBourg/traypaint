@@ -146,7 +146,8 @@ int main(void) {
 
 		if(IsKeyPressed(KEY_Z)) {
 			if(IsKeyDown(KEY_LEFT_CONTROL)) {
-				memset(&lines[--cnt], 0, sizeof(struct Line));
+				if(cnt-- > 0)
+					memset(&lines[cnt], 0, sizeof(struct Line));
 			}
 		}
 
