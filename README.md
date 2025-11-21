@@ -1,6 +1,6 @@
 # traypaint
 
-### **t**iny **ray**lib **paint** application
+**t**iny **ray**lib **paint** application
 
 Simple application meant to be lightweight for quick image needs such as doodling.
 
