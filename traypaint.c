@@ -24,6 +24,8 @@
 #define MAX_LINES 4096
 #define PADDING 50
 
+int w, h, cw, ch;
+
 struct Line {
 	Vector2 start, end;
 	Color color;
@@ -31,6 +33,23 @@ struct Line {
 
 bool veccmp(Vector2 v1, Vector2 v2) {
 	return (v1.x == v2.x && v1.y == v2.y);
+}
+
+void clampVector2(Vector2 *v, int cw, int ch) {
+	if(v->x < PADDING)
+		v->x = PADDING;
+	if(v->y < PADDING)
+		v->y = PADDING;
+	if(v->x >= cw+PADDING)
+		v->x = cw+PADDING;
+	if(v->y >= ch+PADDING)
+		v->y = ch+PADDING;
+}
+
+Vector2 getCanvasPos() {
+	Vector2 v = GetMousePosition();
+	clampVector2(&v, cw, ch);
+	return v;
 }
 
 void drawLines(struct Line lines[]) {
@@ -43,8 +62,7 @@ void drawLines(struct Line lines[]) {
 
 int main(void) {
 	char *title = "traypaint;";
-	// screen and canvas dimensions
-	int w, h, cw, ch;
+
 	w=h=cw=ch=0;
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(600, 400, title);
@@ -78,9 +96,10 @@ int main(void) {
 
 		w = GetRenderWidth();
 		h = GetRenderHeight();
+
+		// Draw canvas
 		cw = GetRenderWidth() - PADDING*2;
 		ch = GetRenderHeight() - PADDING*2;
-
 		DrawRectangle(PADDING, PADDING, cw, ch, RAYWHITE);
 
 		// Draw data
@@ -105,10 +124,10 @@ int main(void) {
 
 		// Get mouse position
 		if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-			startpos = GetMousePosition();
+			startpos = getCanvasPos();
 		}
 		if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-			endpos = GetMousePosition();
+			endpos = getCanvasPos();
 			DrawLineV(startpos, endposl, RAYWHITE);
 			DrawLineV(startpos, endpos, currentColor);
 		}
