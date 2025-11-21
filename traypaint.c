@@ -52,8 +52,8 @@ Vector2 getCanvasPos() {
 	return v;
 }
 
-void drawLines(struct Line lines[]) {
-	for(int i=0; i<MAX_LINES; ++i) {
+void drawLines(struct Line lines[], int count) {
+	for(int i=0; i<count; ++i) {
 		DrawLineV(lines[i].start,
 				lines[i].end,
 				lines[i].color);
@@ -103,7 +103,7 @@ int main(void) {
 		DrawRectangle(PADDING, PADDING, cw, ch, RAYWHITE);
 
 		// Draw data
-		drawLines(lines);
+		drawLines(lines, cnt);
 
 		// Color boxes
 		int cbw = (w/2) /
@@ -146,8 +146,7 @@ int main(void) {
 
 		if(IsKeyPressed(KEY_Z)) {
 			if(IsKeyDown(KEY_LEFT_CONTROL)) {
-				if(cnt-- > 0)
-					memset(&lines[cnt], 0, sizeof(struct Line));
+				if(cnt > 0) cnt--;
 			}
 		}
 
